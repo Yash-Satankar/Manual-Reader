@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+
 import '../services/api_service.dart';
 
 class QuestionScreen extends StatefulWidget {
   final int pdfId;
 
-  QuestionScreen({required this.pdfId});
+  const QuestionScreen({super.key, required this.pdfId});
 
   @override
   _QuestionScreenState createState() => _QuestionScreenState();
@@ -22,8 +23,11 @@ class _QuestionScreenState extends State<QuestionScreen>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    _slideAnimation = Tween<Offset>(begin: Offset(0, 1), end: Offset(0, 0)).animate(_controller);
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 1), end: const Offset(0, 0))
+            .animate(_controller);
   }
 
   Future<void> _askQuestion() async {
@@ -39,7 +43,8 @@ class _QuestionScreenState extends State<QuestionScreen>
         _controller.forward();
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to get answer")));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Failed to get answer")));
     } finally {
       setState(() => _isLoading = false);
     }
@@ -48,31 +53,34 @@ class _QuestionScreenState extends State<QuestionScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Ask a Question')),
+      appBar: AppBar(title: const Text('Ask a Question')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
               controller: _questionController,
-              decoration: InputDecoration(labelText: 'Enter your question'),
+              decoration:
+                  const InputDecoration(labelText: 'Enter your question'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _isLoading ? null : _askQuestion,
-              child: _isLoading ? CircularProgressIndicator() : Text('Ask'),
+              child: _isLoading
+                  ? const CircularProgressIndicator()
+                  : const Text('Ask'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             if (_answer != null)
               SlideTransition(
                 position: _slideAnimation,
                 child: Container(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.blue[100],
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(_answer!, style: TextStyle(fontSize: 16)),
+                  child: Text(_answer!, style: const TextStyle(fontSize: 16)),
                 ),
               ),
           ],

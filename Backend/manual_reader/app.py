@@ -41,5 +41,13 @@ def ask_question():
 
     return jsonify({"answer": answer})
 
+@app.route('/get_history', methods=['GET'])
+def get_history():
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM user_history ORDER BY timestamp DESC")
+    history = cursor.fetchall()
+    cursor.close()
+    return jsonify(history), 200
+
 if __name__ == "__main__":
     app.run(debug=True)
