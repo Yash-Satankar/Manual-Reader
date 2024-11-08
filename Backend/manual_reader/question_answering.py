@@ -1,12 +1,12 @@
 from transformers import pipeline
-from document_processing import index, embedder, prepare_index
+from document_processing import index, embedder
 import numpy as np
 
-qa_pipeline = pipeline("question-answering", model="facebook/bart-large-cnn")
+qa_pipeline = pipeline("question-answering", model="distilbert-base-cased-distilled-squad")
 
 def retrieve_relevant_chunk(question, chunks):
     question_embedding = np.array(embedder.encode([question], convert_to_tensor=True))
-    distances, indices = index.search(question_embedding, k=3)
+    _, indices = index.search(question_embedding, k=3)
     relevant_chunks = [chunks[i] for i in indices[0] if i < len(chunks)]
     return relevant_chunks
 

@@ -5,10 +5,9 @@ import faiss
 import numpy as np
 
 embedder = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
-embedding_dim = 768
 nlist = 100
-quantizer = faiss.IndexFlatL2(embedding_dim)
-index = faiss.IndexIVFFlat(quantizer, embedding_dim, nlist)
+quantizer = faiss.IndexFlatL2(768)
+index = faiss.IndexIVFFlat(quantizer, 768, nlist, faiss.METRIC_L2)
 
 def extract_text_from_pdf(file_path):
     text = ""
@@ -21,8 +20,21 @@ def extract_text_from_pdf(file_path):
 
 def prepare_index(text):
     chunks = text.split("\n\n")
+
+    if not chunks:
+        raise ValueError("No text chunks found to index.")
     embeddings = embedder.encode(chunks, convert_to_tensor=True)
     embeddings = np.array(embeddings)
-    index.train(embeddings)
-    index.add(embeddings)
-    return chunks
+
+    nlist = min(100, len(embeddings) // 2)
+
+    dimension = embeddings.shape[1]
+    quantizer = faiss.IndexFlatL2(dimension)
+    index = faiss.IndexIVFFlat(quantizer, dimension, nlist, faiss.METRIC_L2)
+
+    if len(embeddings) >= nlist:
+        index.train(embeddings)
+        index.add(embeddings)
+    else:
+        raise ValueError("Insufficient data for training FAISS index.")
+    return chunks, index

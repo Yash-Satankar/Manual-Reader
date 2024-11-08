@@ -11,6 +11,7 @@ CORS(app)
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+chunks = []
 
 @app.route('/upload_pdf', methods=['POST'])
 def upload_pdf():
