@@ -2,8 +2,8 @@ import mysql.connector
 
 db_config = {
     "host": "localhost",
-    "user": "root", #Enter your username
-    "password": "Yks@251198", #Enter your password
+    "user": "user_name", #Enter your username
+    "password": "password", #Enter your password
     "database": "manual_reader_db"
 }
 
