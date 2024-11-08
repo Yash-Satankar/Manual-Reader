@@ -4,6 +4,7 @@ from document_processing import extract_text_from_pdf, prepare_index
 from question_answering import answer_question
 from database import save_pdf_info, save_qa_history
 from flask_cors import CORS
+from database import get_db_connection
 
 app = Flask(__name__)
 CORS(app)
@@ -43,6 +44,7 @@ def ask_question():
 
 @app.route('/get_history', methods=['GET'])
 def get_history():
+    connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM user_history ORDER BY timestamp DESC")
     history = cursor.fetchall()
